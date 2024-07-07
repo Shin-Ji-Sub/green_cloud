@@ -25,7 +25,7 @@ public class Logger {
 		ServletRequestAttributes attrs = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
 		if (attrs != null) {
 			HttpServletRequest req = attrs.getRequest();
-			UserDto loginUser = (UserDto)req.getSession().getAttribute("loginuser");
+			UserDto loginUser = (UserDto)req.getSession().getAttribute("loginUser");
 			String uri = req.getRequestURI();
 			
 			String user = loginUser != null ? loginUser.getUserId() : "guest";

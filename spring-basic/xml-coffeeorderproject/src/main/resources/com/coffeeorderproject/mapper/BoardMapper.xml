@@ -68,8 +68,18 @@
 	</select>
 
 	<insert id="insertBoardComment" parameterType="BoardCommentDto">
+		<selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			SELECT IFNULL(MAX(commentno), 0) + 1 FROM comment
+		</selectKey>
 		INSERT INTO comment (boardno, userid, commentcontent, groupno, replycount, replylocation) 
-		VALUES (#{ boardNo }, #{ userId }, #{ commentContent }, -1, 1, 0)
+		VALUES (#{ boardNo }, #{ userId }, #{ commentContent }, #{ commentNo }, 1, 0)
 	</insert>
+	
+	<select id="selectBoardCommentsByBoardNo" parameterType="int" resultType="BoardCommentDto">
+		SELECT commentno, userid, boardno,  commentcontent, commentdate, commodifydate, commentactive, groupno, replycount, replylocation
+		FROM comment
+		WHERE boardno = #{ boardNo }
+		ORDER BY groupno DESC, replycount ASC
+	</select>
 
 </mapper>

@@ -23,7 +23,9 @@ public interface BoardService {
 	BoardAttachDto findBoardAttachByAttachNo(int attachNo);
 	
 	void writeComment(BoardCommentDto comment);
-//
+
+	List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo);
+	
 //	void writeBoardContent(BoardDto board);
 //
 //	List<BoardDto> findReviewBoard();
@@ -45,6 +47,7 @@ public interface BoardService {
 //
 //	List<BoardDto> findInquiry1on1Board();
 //
+
 	
 //
 //	void deleteComment(int commentNo);

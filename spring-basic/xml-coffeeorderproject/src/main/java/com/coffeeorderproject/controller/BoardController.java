@@ -123,6 +123,7 @@ public class BoardController {
 	
 	@PostMapping(path = { "/write-comment" }, produces = "text/plain;charset=utf-8")
 	public String writeComment(BoardCommentDto comment) {
+		System.out.println(comment.getCommentContent());
 		String result = "success";
 		
 		try {
@@ -132,6 +133,15 @@ public class BoardController {
 		}
 		
 		return result;
+	}
+	
+	@GetMapping(path = { "/list-comment" })
+	public String listComment(int boardNo, Model model) {
+		
+		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
+		model.addAttribute("comments", comments);
+		
+		return "board/comment-list";
 	}
 	
 }
