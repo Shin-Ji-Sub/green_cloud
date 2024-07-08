@@ -220,9 +220,9 @@
 						</div>
 						<div class="modal-body">
 							<form id="recommentform" action="write-recomment" method="post">
-								<input type="hidden" name="boardno" value="${ board.boardNo }" />
-								<input type="hidden" name="commentno" value="" /> <input
-									type="hidden" name="userId" value="${ loginUser.userId }" />
+								<input type="hidden" name="boardNo" value="${ board.boardNo }" />
+								<input type="hidden" name="commentNo" value="" /> 
+								<input type="hidden" name="userId" value="${ loginUser.userId }" />
 
 								<textarea id="recomment-content" name="content"
 									class="form-control" style="resize: none;" rows="3"></textarea>
@@ -285,18 +285,16 @@
 				src="/xml-coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
 		
 			<!-- Template Javascript -->
-			<script src="/xml-coffeeorderproject/resources/userAssets/js/main.js"></script>
+			<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+			
 			<script type="text/javascript">
 				$(function() {
-					$('#delete_button')
-							.on(
-									'click',
-									function(event) {
-										const ok = confirm("${ board.boardNo }번 글을 삭제할까요?");
-										if (ok) {
-											location.href = 'delete?boardno=${ board.boardNo }';
-										}
-									});
+					$('#delete_button').on('click', function(event) {
+						const ok = confirm("${ board.boardNo }번 글을 삭제할까요?");
+						if (ok) {
+							location.href = 'delete?boardno=${ board.boardNo }';
+						}
+					});
 
 					$('#edit_button').on('click', function(event) {
 						location.href = 'edit?boardno=${ board.boardNo }';
@@ -330,8 +328,8 @@
 						
 						const commentForm = $('#commentform');
 						const data = commentForm.serializeArray();
-						console.log(data);
-						return;
+						//console.log(data);
+						//return;
 						
 						$.ajax({
 							"url" : commentForm.attr('action'),
@@ -395,27 +393,41 @@
 						currentEditCommentNo = null;
 					});
 
-					$('.modify-comment').on(
-							'click',
-							function(event) {
-								const commentNo = $(this).data('comment-no');
-								$('#comment-edit-area-' + commentNo + ' form')
-										.submit();
-							});
+					$('#comment-list').on('click', '.modify-comment', function(event) {
+						const commentNo = $(this).data('comment-no');
+						$('#comment-edit-area-' + commentNo + ' form').submit();
+					});
 
-					$('.write-recomment').on('click', function(event) {
+					$('#comment-list').on('click', '.write-recomment', function(event) {
 
 						$('#recommentform')[0].reset(); // form 초기화
 
 						const commentNo = $(this).data('comment-no');
-						$('#recommentform input[name=commentno]').val(commentNo);
+						$('#recommentform input[name=commentNo]').val(commentNo);
 
 						$('#recomment-modal').modal('show');
 					});
 
 					$('#write-recomment-btn').on('click', function(event) {
 
-						$('#recommentform').submit();
+						// $('#recommentform').submit();
+						const recommentForm = $('#recommentForm');
+						$.ajax({
+							"url" : recommentForm.attr('action'),
+							"method" : recommentForm.attr('method'),
+							"data" : recommentForm.serialize(),
+							"success" : function(result, status, xhr) {
+								if (result === "success") {
+									$('#comment-list').load("list-comment", "boardNo=${board.boardNo}");
+									$('#recomment-modal').modal('hide');
+								} else {
+									alert("대댓글 작성 실패ㅠㅠ");
+								}
+							},
+							"error" : function(xhr, status, err) {
+								alert("대댓글 작성 실패");
+							}
+						});
 
 					});
 				});
@@ -433,6 +445,7 @@
 				
 				
 			</script>
+			<script src="/xml-coffeeorderproject/resources/userAssets/js/main.js"></script>
 </body>
 
 </html>

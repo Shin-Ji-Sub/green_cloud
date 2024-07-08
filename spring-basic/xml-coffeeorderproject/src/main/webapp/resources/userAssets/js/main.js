@@ -45,7 +45,7 @@
 
 
     // Testimonial carousel
-    $(".testimonial-carousel").owlCarousel({
+    /*$(".testimonial-carousel").owlCarousel({
         autoplay: true,
         smartSpeed: 2000,
         center: false,
@@ -75,7 +75,7 @@
                 items:2
             }
         }
-    });
+    });*/
 
 
     // vegetable carousel

@@ -22,19 +22,19 @@ public interface BoardService {
 	BoardAttachDto findBoardAttachByAttachNo(int attachNo);
 
 
-//	void deleteBoard(int boardNo);
-//
-//	void deleteBoardAttach(int attachNo);
-//
-//	void modifyBoard(BoardDto board);
-//
+	void deleteBoard(int boardNo);
+
+	void deleteBoardAttach(int attachNo);
+
+	void modifyBoard(BoardDto board);
+
 	void writeComment(BoardCommentDto comment);
-//
-//	void deleteComment(int commentNo);
-//
-//	void editComment(BoardCommentDto comment);
-//
-//	void writeReComment(BoardCommentDto comment);
+
+	void deleteComment(int commentNo);
+
+	void editComment(BoardCommentDto comment);
+
+	void writeReComment(BoardCommentDto comment);
 
 	List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo);
 

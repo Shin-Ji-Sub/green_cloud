@@ -124,8 +124,8 @@
 	      </div>
 	      <div class="modal-body">
 	        <form id="recommentform" action="write-recomment" method="post">
-	        	<input type="hidden" name="boardno" value="${ board.boardNo }" />
-				<input type="hidden" name="commentno" value="" />
+	        	<input type="hidden" name="boardNo" value="${ board.boardNo }" />
+				<input type="hidden" name="commentNo" value="" />
 				<input type="hidden" name="writer" value="${ loginuser.memberId }" />
 				
 				<textarea id="recomment-content" name="content" class="form-control" style="resize: none;" rows="3"></textarea>
@@ -148,12 +148,12 @@
 			$('#delete_button').on('click', function(event) {
 				const ok = confirm("${ board.boardNo }번 글을 삭제할까요?");
 				if (ok) {
-					location.href = 'delete?boardno=${ board.boardNo }';
+					location.href = 'delete?boardNo=${ board.boardNo }&pageNo=${ pageNo }';
 				}
 			});
 			
 			$('#edit_button').on('click', function(event) {
-				location.href = 'edit?boardno=${ board.boardNo }';
+				location.href = 'edit?boardNo=${ board.boardNo }&pageNo=${ pageNo }';
 			});
 			
 			$('#tolist_button').on('click', function(event) {
@@ -211,7 +211,23 @@
 				const commentNo = $(this).data('comment-no'); // .data('comment-no') -> data-comment-no 속성의 값 조회
 				const ok = confirm(commentNo + "번 댓글을 삭제할까요?");
 				if (ok) {
-					location.href = 'delete-comment?boardno=${ board.boardNo }&commentno=' + commentNo;
+					// location.href = 'delete-comment?boardno=${ board.boardNo }&commentno=' + commentNo;
+					$.ajax({
+						"url" : "delete-comment",
+						"method" : "get",
+						"data" : "commentNo=" + commentNo,
+						"success" : function(result, status, xhr) {
+							if (result === "success") {
+								$('#comment-list').load("list-comment", "boardNo=${board.boardNo}");
+							} else {
+								alert("댓글 삭제 실패 1")
+							}
+						},
+						"error" : function(xhr, status, err) {
+							alert("댓글 삭제 실패 2");
+						}
+					});
+					
 				}
 				
 			});
@@ -242,7 +258,25 @@
 			// $('.modify-comment').on('click', function(event) {
 			$('#comment-list').on('click', '.modify-comment', function(event) {
 				const commentNo = $(this).data('comment-no');
-				$('#comment-edit-area-' + commentNo + ' form').submit();
+				// $('#comment-edit-area-' + commentNo + ' form').submit();
+				const editForm = $('#comment-edit-area-' + commentNo + ' form');
+				const formData = $('#comment-edit-area-' + commentNo + ' form').serialize();
+				$.ajax({
+					"url" : editForm.attr('action'),
+					"method" : editForm.attr('method'),
+					"data" : editForm.serialize(),
+					"success" : function(result, status, xhr) {
+						if (result === "success") {
+							$('#comment-list').load("list-comment", "boardNo=${board.boardNo}");
+						} else {
+							alert("댓글 수정 실패 1")
+						}
+					},
+					"error" : function(xhr, status, err) {
+						alert("댓글 수정 실패 2");
+					}
+				})
+				
 			});
 			
 			
@@ -253,7 +287,7 @@
 				$('#recommentform')[0].reset(); // form 초기화
 				
 				const commentNo = $(this).data('comment-no'); // 현재 클릭된 댓글의 번호
-				$('#recommentform input[name=commentno]').val(commentNo);
+				$('#recommentform input[name=commentNo]').val(commentNo);
 				
 				$('#recomment-modal').modal('show'); // show : 표시, hide : 숨기기
 				
@@ -262,7 +296,24 @@
 			// 대댓글(recomment) 2. 대댓글 작성 요청 보내기
 			$('#write-recomment-btn').on('click', function(event) {
 				
-				$('#recommentform').submit();
+				//$('#recommentform').submit();
+				$.ajax({
+					"url" : $('#recommentform').attr('action'),
+					"method" : $('#recommentform').attr('method'),
+					"data" : $('#recommentform').serialize(),
+					"success" : function(result, status, xhr) {
+						if (result === "success") {
+							$('#comment-list').load("list-comment", "boardNo=${board.boardNo}");
+							$('#recomment-modal').modal('hide');
+						} else {
+							alert("대댓글 작성 실패 1")
+						}
+					},
+					"error" : function(xhr, status, err) {
+						alert("대댓글 작성 실패 2");
+					}
+				});
+				
 				
 			});
 		});

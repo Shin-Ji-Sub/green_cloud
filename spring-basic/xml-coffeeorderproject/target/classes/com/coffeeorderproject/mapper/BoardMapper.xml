@@ -81,5 +81,24 @@
 		WHERE boardno = #{ boardNo }
 		ORDER BY groupno DESC, replycount ASC
 	</select>
+	
+	<select id="selectBoardCommentByCommentNo" parameterType="int" resultType="BoardCommentDto">
+		SELECT commentno, userid, boardno, commentcontent, commentdate, commodifydate, commentactive, groupno, replycount, replylocation
+		FROM comment
+		WHERE commentno = #{ commentNo }
+	</select>
+	
+	<update id="updateStep" parameterType="BoardCommentDto">
+		<![CDATA[
+		UPDATE comment 
+		SET replycount = replycount + 1 
+		WHERE groupno = #{ groupNo } AND replycount > #{ replycount }
+		]]>
+	</update>
+	
+	<insert id="insertReComment" parameterType="BoardCommentDto">
+		INSERT INTO comment (userid, boardno, commentcontent, groupno, replycount, replylocation) 
+		VALUES (#{ userId }, #{ boardNo }, #{ commentContent }, #{ groupno }, #{ replycount }, #{ replylocation })
+	</insert>
 
 </mapper>

@@ -36,6 +36,12 @@ public interface BoardMapper {
 
 	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
 
+	BoardCommentDto selectBoardCommentByCommentNo(int commentNo);
+
+	void updateStep(BoardCommentDto parent);
+
+	void insertReComment(BoardCommentDto comment);
+
 
 	
 }

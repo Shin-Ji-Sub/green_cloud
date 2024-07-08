@@ -149,6 +149,91 @@ public class BoardController {
 		
 	}
 	
+	@GetMapping(path = { "/delete" })
+	public String delete(int boardNo, @RequestParam(defaultValue = "-1") int pageNo) {
+		
+		if (pageNo == -1) {
+			return "redirect:list";
+		}
+		
+		boardService.deleteBoard(boardNo);
+		
+		return String.format("redirect:list?pageNo=%d", pageNo);
+		
+	}
+	
+	@GetMapping(path = { "/edit" })
+	public String showEditForm(int boardNo, @RequestParam(defaultValue = "-1") int pageNo, Model model) {
+		
+		if (pageNo == -1) {
+			return "redirect:list";
+		}
+		
+		BoardDto board = boardService.findBoardByBoardNo(boardNo);
+		model.addAttribute("board", board);
+		model.addAttribute("pageNo", pageNo);
+		
+		return "board/edit";
+		
+	}
+	
+	@PostMapping(path = { "/edit" })
+	public String editBoard(BoardDto board, MultipartFile attach, HttpServletRequest req, @RequestParam(required = false) Integer pageNo) {
+		
+		if (board.getBoardNo() == 0 || pageNo == null) {
+			return "redirect:list";
+		}
+		
+		if (attach != null && attach.getSize() > 0) {
+			BoardAttachDto attachment = new BoardAttachDto();
+			ArrayList<BoardAttachDto> attachments = new ArrayList<>();
+			try {
+				String dir = req.getServletContext().getRealPath("/board-attachments");
+				String userFileName = attach.getOriginalFilename();
+				String savedFileName = Util.makeUniqueFileName(userFileName);
+				attach.transferTo(new File(dir, savedFileName));  // 파일 저장
+				
+				attachment.setBoardNo(board.getBoardNo());
+				attachment.setUserFileName(userFileName);
+				attachment.setSavedFileName(savedFileName);
+				attachments.add(attachment);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			board.setAttachments(attachments);
+		}
+		
+		try {
+			boardService.modifyBoard(board);
+		} catch (Exception ex) {
+			System.out.println("글수정 실패");
+			return String.format("redirect:edit?boardNo=%d&pageNo=%d", board.getBoardNo(), pageNo);
+		}
+		
+		return String.format("redirect:detail?boardno=%d&pageNo=%d", board.getBoardNo(), pageNo);
+	}
+	
+	@GetMapping(path = { "/delete-attach" })
+	@ResponseBody
+	public String deleteAttach(@RequestParam(required = false) Integer attachNo, HttpServletRequest req) {
+		
+		if (attachNo == null) {
+			return "Invalid attachNo";
+		}
+		
+		BoardAttachDto attach = boardService.findBoardAttachByAttachNo(attachNo);
+		String dirPath = req.getServletContext().getRealPath("/board-attachments");
+		File file = new File(dirPath, attach.getSavedFileName());
+		if (file.exists()) {
+			file.delete();
+		}
+		boardService.deleteBoardAttach(attachNo);
+		
+		return "success";
+		
+	}
+	
 	
 	@GetMapping(path = { "/list-comment" })
 	public String listComment(int boardNo, Model model) {
@@ -158,6 +243,8 @@ public class BoardController {
 		
 		return "board/comment-list";
 	}
+	
+	
 	
 	
 	

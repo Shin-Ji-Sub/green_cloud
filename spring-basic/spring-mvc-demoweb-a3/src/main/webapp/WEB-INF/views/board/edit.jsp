@@ -12,8 +12,8 @@
 <head>
 	<meta charset="utf-8" />
 	<title>글수정</title>
-	<link rel="Stylesheet" href="/demoweb/styles/default.css" />
-	<link rel="Stylesheet" href="/demoweb/styles/input2.css" />
+	<link rel="Stylesheet" href="/spring-demoweb/resources/styles/default.css" />
+	<link rel="Stylesheet" href="/spring-demoweb/resources/styles/input2.css" />
 </head>
 <body>
 
@@ -26,7 +26,8 @@
 		    <div id="inputmain">
 		        <div class="inputsubtitle">게시글 정보</div>
 		        <form action="edit" method="post" enctype="multipart/form-data">		        
-		        <input type="hidden" name="boardno" value="${ board.boardNo }">
+		        <input type="hidden" name="boardNo" value="${ board.boardNo }">
+		        <input type="hidden" name="pageNo" value="${ pageNo }">
 		        <table>
 		            <tr>
 		                <th>제목</th>
@@ -42,8 +43,9 @@
 		                <th>첨부파일</th>
 		                <td>
 		                	<c:forEach var="attach" items="${ board.attachments }">
-		                	${ attach.userFileName } 
-		                	[<a href='delete-attach?attachno=${ attach.attachNo }&boardno=${ board.boardNo }'>삭제</a>]<br>
+		                	<div data-attachno='${ attach.attachNo }'>${ attach.userFileName }
+		                	[<a href='javascript:' class="delete-attach" data-attachno='${ attach.attachNo }'>삭제</a>]<br>
+		                	</div>
 		                	</c:forEach>
 		                    <input type="file" name="attach" style="width:580px;height:20px" />
 		                </td>
@@ -72,7 +74,31 @@
 	
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	<script type="text/javascript">
+		// delete-attach?attachNo=${ attach.attachNo }&boardNo=${ board.boardNo }
+		$('#btn-cancel').on('click', (e) => {
+			location.href = 'detail?boardno=${ board.boardNo }&pageNo=${ pageNo }';
+		});
 	
+		$('.delete-attach').on('click', (e) => {
+			const attachNo = $(e.currentTarget).data('attachno');
+			// alert(attachNo);
+			$.ajax({
+				"url" : 'delete-attach',
+				"method" : "GET",
+				"data" : { 'attachNo' : attachNo },   // 'attachNo=' + attachNo
+				"success" : function(result, status, xhr) {
+					if (result === "success") {
+						alert('첨부파일을 삭제했습니다.');
+						$("div[data-attachno=" + attachNo + "]").remove();
+					} else {
+						alert('fail to delete attach 1');
+					}
+				},
+				"error" : function(xhr, status, err) {
+					alert('fail to delete attach 2');
+				}
+			});
+		});
 	</script>
 
 </body>

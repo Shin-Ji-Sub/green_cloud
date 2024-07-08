@@ -39,4 +39,20 @@ public interface BoardMapper {
 	
 	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
 	
+	void updateCommentDeleted(int commentNo);
+	
+	void updateComment(BoardCommentDto comment);
+	
+	BoardCommentDto selectBoardCommentByCommentNo(int commentNo);
+	
+	void updateStep(BoardCommentDto parent);
+	
+	void insertReComment(BoardCommentDto comment);
+	
+	void updateBoardDeleted(int boardNo);
+	
+	void deleteBoardAttach(int attachNo);
+	
+	void updateBoard(BoardDto board);
+	
 }

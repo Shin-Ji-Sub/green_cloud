@@ -141,6 +141,23 @@
 		WHERE attachno = #{ attachNo }
 	</select>
 	
+	<update id="updateCommentDeleted" parameterType="int">
+		UPDATE boardcomment 
+		SET deleted = '1' 
+		WHERE commentno = #{ commentNo }
+	</update>
+	
+	<update id="deleteBoardAttach" parameterType="int">
+		DELETE FROM boardattach 
+		WHERE attachno = #{ attachNo }
+	</update>
+	
+	<update id="updateBoard" parameterType="BoardDto">
+		UPDATE board 
+		SET title = #{ title }, content = #{ content } 
+		WHERE boardno = #{ boardNo }
+	</update>
+	
 	<insert id="insertComment" parameterType="BoardCommentDto">
 		INSERT INTO boardcomment (commentno, boardno, writer, content, groupno, step, depth) 
 		VALUES (BOARDCOMMENT_SEQUENCE.NEXTVAL, #{ boardNo }, #{ writer }, #{ content }, BOARDCOMMENT_SEQUENCE.CURRVAL, 1, 0)
@@ -160,6 +177,41 @@
 		WHERE boardno = #{ boardNo }
 		ORDER BY groupno DESC, step ASC
 	</select>
+	
+	
+	
+	<update id="updateComment" parameterType="BoardCommentDto">
+		UPDATE boardcomment 
+		SET content = #{ content } 
+		WHERE commentno = #{ commentNo }
+	</update>
+	
+	<select id="selectBoardCommentByCommentNo" parameterType="int" resultType="BoardCommentDto">
+		SELECT commentNo, boardNo, writer, content, writeDate, modifyDate, groupNo, step, depth, deleted
+		FROM boardcomment
+		WHERE commentno = #{ commentNo }
+	</select>
+	
+	<update id="updateStep" parameterType="BoardCommentDto">
+		<![CDATA[
+		UPDATE boardcomment 
+		SET step = step + 1 
+		WHERE groupno = #{ groupNo } AND step > #{ step }
+		]]>
+	</update>
+	
+	<insert id="insertReComment" parameterType="BoardCommentDto">
+		INSERT INTO boardcomment (commentNo, boardno, writer, content, groupno, step, depth) 
+		VALUES (BOARDCOMMENT_SEQUENCE.NEXTVAL, #{ boardNo }, #{ writer }, #{ content }, #{ groupNo }, #{ step }, #{ depth })
+	</insert>
+	
+	<update id="updateBoardDeleted" parameterType="int">
+		UPDATE board 
+		SET deleted = '1'
+		WHERE boardno = #{ boardNo }
+	</update>
+	
+	
 	
 	
 </mapper>

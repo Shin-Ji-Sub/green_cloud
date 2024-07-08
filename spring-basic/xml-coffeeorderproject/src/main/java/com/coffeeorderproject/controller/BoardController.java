@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 
@@ -121,19 +122,6 @@ public class BoardController {
 		
 	}
 	
-	@PostMapping(path = { "/write-comment" }, produces = "text/plain;charset=utf-8")
-	public String writeComment(BoardCommentDto comment) {
-		System.out.println(comment.getCommentContent());
-		String result = "success";
-		
-		try {
-			boardService.writeComment(comment);
-		} catch (Exception ex) {
-			result = "fail";
-		}
-		
-		return result;
-	}
 	
 	@GetMapping(path = { "/list-comment" })
 	public String listComment(int boardNo, Model model) {
