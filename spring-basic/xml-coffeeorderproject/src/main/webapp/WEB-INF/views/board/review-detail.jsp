@@ -178,29 +178,20 @@
 			<!-- ////////////////////////////////////////////////////////////////////// -->
 			<!-- write comment area -->
 			<form id="commentform" action="write-comment" method="post">
-				<input type="hidden" name="boardNo" value="${ board.boardNo }" /> <input
-					type="hidden" name="pageNo" value="${ pageNo }" /> <input
-					type="hidden" name="userId" value="${ loginUser.userId }" />
+				<input type="hidden" name="boardNo" value="${ board.boardNo }" />
+			    <input type="hidden" name="pageNo" value="${ pageNo }" /> 
+			    <input type="hidden" name="userId" value="${ loginUser.userId }" />
 				<table style="width: 800px; border: solid 1px; margin: 0 auto">
 					<tr>
-						<td style="width: 750px"><textarea id="comment_content"
-								name="content" style="width: 100%; resize: none;" rows="3"></textarea>
+						<td style="width: 750px">
+							<textarea id="comment_content" name="commentContent" style="width: 100%; resize: none;" rows="3"></textarea>
 						</td>
 						<td style="width: 50px; vertical-align: middle">
-							
-							<!-- 댓글 버튼 -->
-							<c:choose>
-								<c:when test="${loginUser != null}">
-									<a id="write-comment-lnk" href="javascript:void(0);"
-										style="text-decoration: none">댓글<br />등록
-									</a>
-								</c:when>
-								<c:otherwise>
-									<a id="offuser-write-comment-lnk" href="javascript:void(0);"
-										style="text-decoration: none">댓글<br />등록
-									</a>
-								</c:otherwise>
-							</c:choose>
+							<td style="width:50px;vertical-align:middle">
+								<a id="write-comment-lnk" href="javascript:" style="text-decoration:none">
+									댓글<br />등록
+								</a>
+							</td>
 						</td>
 					</tr>
 				</table>
@@ -212,87 +203,8 @@
 			<br>
 
 			<!-- comment list area -->
-			<table id="comment-list"
-				style="width: 800px; border: solid 1px; margin: 0 auto">
-				<c:forEach var="comment" items="${ board.comments }">
-					<tr>
-						<td
-							style="text-align: left; margin: 5px; border-bottom: solid 1px;">
-							<table>
-								<tr>
-									<td>
-										<c:forEach begin="0" end="${ comment.replylocation }">
-										&nbsp;&nbsp;
-										</c:forEach> 
-										<c:if test="${ comment.replylocation > 0 }">
-											<img src="/xml-coffeeorderproject/resources/image/re.gif">
-										</c:if>
-									</td>
-									<td>
-										<div id="comment-view-area-${ comment.commentNo }">
-											<c:choose>
-												<c:when test="${ comment.commentActive }">
-													<br>
-													<br>
-													<span style='color: gray'>삭제된 글입니다.</span>
-													<br>
-													<br>
-												</c:when>
-												<c:otherwise>
-														${ comment.userId } &nbsp;&nbsp; 
-														[<fmt:formatDate value="${ comment.commentDate }"
-														pattern="yyyy-MM-dd hh:mm:ss" />]
-								  					<br />
-													<br />
-													<span>${ fn:replace(comment.commentContent, enter, "<br>") }</span>
-													<br />
-													<br />
-													<div
-														style='float:left; display:${ (not empty loginUser and loginUser.userId == comment.userId) ? "block" : "none" }'>
-														<a class="edit-comment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">편집</a> &nbsp; <a
-															class="delete-comment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">삭제</a> &nbsp;&nbsp;
-													</div>
-													<div
-														style='float:left; display:${ not empty loginUser ? "block" : "none" }'>
-														<a class="write-recomment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">댓글쓰기</a>
-													</div>
-													<span style="clear: both"></span>
-												</c:otherwise>
-											</c:choose>
-										</div>
-										<div id="comment-edit-area-${ comment.commentNo }"
-											style="display: none">
-											${ comment.userId } &nbsp;&nbsp; [${ comment.commentDate }] <br />
-											<br />
-											<form action="edit-comment" method="post">
-												<input type="hidden" name="boardno"
-													value="${ board.boardNo }" /> <input type="hidden"
-													name="commentno" value="${ comment.commentNo }" />
-												<textarea name="content" style="width: 99%; resize: none"
-													rows="3" cols="120">${ comment.commentContent }</textarea>
-											</form>
-											<br />
-											<div>
-												<a class="modify-comment"
-													data-comment-no="${ comment.commentNo }" href="javascript:">수정</a>
-												&nbsp; <a class="cancel-edit-comment"
-													data-comment-no="${ comment.commentNo }" href="javascript:">취소</a>
-											</div>
-										</div>
-
-									</td>
-
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</c:forEach>
+			<table id="comment-list" style="width: 800px; border: solid 1px; margin: 0 auto">
+				
 			</table>
 			<!-- end of comment list area -->
 			<!-- Modal -->
@@ -325,9 +237,55 @@
 					</div>
 				</div>
 			</div>
+			
+			
+
+			<!-- Tastimonial End -->
+
+
+			<!-- Footer Start -->
+			<jsp:include page="/WEB-INF/views/modules/footer.jsp" />
+			<!-- Footer End -->
+
+
+			<!-- Back to Top -->
+			<a href="#"
+				class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+				class="fa fa-arrow-up"></i></a>
+
+
+			<!-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+			JavaScript Libraries
+			<script
+				src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+			<script
+				src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="/xml-coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
 			<script
 				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-			<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+			
+			Template Javascript
+			<script src="/xml-coffeeorderproject/resources/userAssets/js/main.js"></script> -->
+			<script
+				src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+			<script
+				src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="/xml-coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
+			<script
+				src="/xml-coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
+		
+			<!-- Template Javascript -->
+			<script src="/xml-coffeeorderproject/resources/userAssets/js/main.js"></script>
 			<script type="text/javascript">
 				$(function() {
 					$('#delete_button')
@@ -347,9 +305,20 @@
 					$('#tolist_button').on('click', function(event) {
 						location.href = 'review?pageNo=${ pageNo }';
 					});
+					
+					///////////////////////////////////////////
+					$('#comment-list').load('list-comment', 'boardNo=${board.boardNo}');
 
 					// 댓글쓰기
 					$('#write-comment-lnk').on('click', function(event) {
+						event.preventDefault();
+						
+						if(${ loginUser == null } ){
+							alert('로그인이 필요합니다.');
+							$('#comment_content').focus();
+							return;
+						}
+						
 						event.preventDefault();
 						if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
 							alert('댓글 내용을 작성하세요');
@@ -359,25 +328,29 @@
 
 						// $('#commentform').submit();
 						
-						const commentForm = $('#commentForm')
+						const commentForm = $('#commentform');
 						const data = commentForm.serializeArray();
+						console.log(data);
+						return;
 						
 						$.ajax({
-							"url" : 'write-comment',
-							"method" : "POST",
+							"url" : commentForm.attr('action'),
+							"method" : commentForm.attr('method'),
 							"data" : data,
 							"dataType" : "text",
 							"success" : (response, status, xhr) => {
-								alert(response);
+								$('#comment-list').load('list-comment', 'boardNo=${board.boardNo}');
+								$('#comment_content').val('');
 							},
 							"error" : (xhr, status, err) => {
-								alert(err);
+								console.log("실패");
+								alert("실패");
 							}
 						});
 						
 					});
 					
-					$('#offuser-write-comment-lnk').on('click', function(event) {
+					/* $('#offuser-write-comment-lnk').on('click', function(event) {
 						event.preventDefault();
 						
 						if(${ loginUser == null } ){
@@ -386,7 +359,7 @@
 							return;
 						}
 					
-					});
+					}); */
 					
 					
 
@@ -460,36 +433,6 @@
 				
 				
 			</script>
-
-			<!-- Tastimonial End -->
-
-
-			<!-- Footer Start -->
-			<jsp:include page="/WEB-INF/views/modules/footer.jsp" />
-			<!-- Footer End -->
-
-
-			<!-- Back to Top -->
-			<a href="#"
-				class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-				class="fa fa-arrow-up"></i></a>
-
-
-			<!-- JavaScript Libraries -->
-			<script
-				src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-			<script
-				src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-			<script src="/xml-coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
-			<script
-				src="/xml-coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
-			<script
-				src="/xml-coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
-			<script
-				src="/xml-coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
-
-			<!-- Template Javascript -->
-			<script src="/xml-coffeeorderproject/resources/userAssets/js/main.js"></script>
 </body>
 
 </html>

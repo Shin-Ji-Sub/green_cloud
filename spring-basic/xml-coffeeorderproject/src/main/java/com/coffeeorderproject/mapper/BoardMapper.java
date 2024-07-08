@@ -34,6 +34,8 @@ public interface BoardMapper {
 
 	void insertBoardComment(BoardCommentDto comment);
 
+	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
+
 
 	
 }
