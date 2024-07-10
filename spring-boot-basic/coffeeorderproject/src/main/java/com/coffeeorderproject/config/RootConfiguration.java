@@ -42,7 +42,7 @@ public class RootConfiguration {
 
 	@Bean
 	// Environment 객체에 저장된 속성 중에서 spring.datasource.hikari로 시작하는 속성을 적용
-	@ConfigurationProperties(prefix = "spring.datasource.hikari")
+	@ConfigurationProperties(prefix = "spring.datasource")
 	HikariConfig hikariConfig() {
 		return new HikariConfig();
 	}

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.demoweb.interceptor.AuthInterceptor;
+import com.coffeeorderproject.interceptor.AuthInterceptor;
 
 @Configuration
 // @EnableWebMvc  // == <annotation-driven /> 웹에 대한 설정 여기서 할거야라는 뜻

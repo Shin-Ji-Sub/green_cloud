@@ -109,7 +109,7 @@ public class AccountController {
 			
 			return "redirect:/home";
 		} else {
-			return "redirect:/login?loginfail=true";
+			return "redirect:/userAccount/login?loginfail=true";
 		}
 		
 	}

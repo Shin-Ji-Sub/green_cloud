@@ -4,8 +4,6 @@ package com.coffeeorderproject.service;
 import java.util.ArrayList;
 
 import com.coffeeorderproject.common.Util;
-import com.coffeeorderproject.dao.CartDao;
-import com.coffeeorderproject.dao.CouponDao;
 import com.coffeeorderproject.dto.CartDto;
 import com.coffeeorderproject.dto.UserCouponDto;
 import com.coffeeorderproject.dto.UserDto;
@@ -43,14 +41,14 @@ public class AccountServiceImpl implements AccountService {
 		
 		UserDto member = userMapper.selectUser(user);
 		
-		if(member != null) { // 정상 로그인이 아닐 경우 
-			// 쿠폰 테이블에 로그인 유저의 데이터가 있는지 조회 (쿠폰이 있는지)
-			CouponDao coupon = new CouponDao();
-			ArrayList<UserCouponDto> couponList = coupon.selectCouponList(user);
-			member.setUsercoupon(couponList);
-			
-			return member;
-		}
+//		if(member != null) { // 정상 로그인이 아닐 경우
+//			// 쿠폰 테이블에 로그인 유저의 데이터가 있는지 조회 (쿠폰이 있는지)
+//			CouponDao coupon = new CouponDao();
+//			ArrayList<UserCouponDto> couponList = coupon.selectCouponList(user);
+//			member.setUsercoupon(couponList);
+//
+//			return member;
+//		}
 		
 
 		return member;
@@ -76,11 +74,13 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	// Application에 저장될 유저 장바구니 목록
-	@Override
+//	@Override
 	public ArrayList<CartDto> getUserCart(String userId) {
-		CartDao cartDao = new CartDao();
-		ArrayList<CartDto> userCartArr = cartDao.selectUserCart(userId);
-		return userCartArr;
+//		CartDao cartDao = new CartDao();
+//		ArrayList<CartDto> userCartArr = cartDao.selectUserCart(userId);
+//		return userCartArr;
+		ArrayList<CartDto> carts = null;
+		return carts;
 	}
 	public void deleteUser(String userId) {
 		

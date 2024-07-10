@@ -1,0 +1,72 @@
+
+library 
+tomcat-embed-jasper  / 내장형 서버
+
+server.servlet.jsp.init-parameters.development=true : 핫 리로딩
+
+tomcat.embed : jsp를 쓸려고
+
+======================================================
+
+start.spring.io 에서
+ - MyBatis Framework
+ - Oracle Driver
+ - Java Mail Sender
+ - Validation
+추가
+
+=====================================================
+
+application.properties 파일에서
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+
+server.servlet.jsp.init-parameters.development=true
+
+(-- dataSource 없을 때 임의로 설정 --)
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@127.0.0.1:1521/xe
+spring.datasource.username=green_cloud
+spring.datasource.password=oracle
+spring.datasource.connection-test-query=SELECT 1 FROM DUAL
+(-- dataSource 없을 때 임의로 설정 --)
+
+ApplicationInitializer 삭제 
+
+config 파일 추가
+
+wepapp 파일 추가
+
+========================================================
+
+thymeleaf : html과 거의 호환이 가능하다. (jsp는 호환 안되는 것이 많음)
+resources/static : css, js, img
+
+resources/templates : html
+
+ctx : servletContext
+
+~{  } : 서버쪽 경로를 찾는 문법 
+
+
+==========================================================
+
+[ 기존 프로젝트 가져오기 (import) ]
+
+1. 프로젝트 구성 파일이 있는 경우 (.project, .settings, ...)
+	
+	import -> general -> existing project into workspace
+	
+
+2. 프로젝트 구성 파일이 없는 경우
+
+	프로젝트 폴더를 워크스페이스에 복사 -> 동일한 이름의 새 프로젝트 만들기
+
+	
+3. 프로젝트 구성 파일이 없는 경우 2 (maven, gradle build 설정 파일 포함)
+
+	프로젝트 폴더를 워크스페이스에 복사 -> import -> maven -> Exisitng Maven Projects
+	프로젝트 폴더를 워크스페이스에 복사 -> import -> gradle -> Exisitng Gradle Projects
+	
+	
+
