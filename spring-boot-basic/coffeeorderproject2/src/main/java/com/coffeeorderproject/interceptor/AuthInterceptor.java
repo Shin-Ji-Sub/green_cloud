@@ -29,7 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if (uri.contains("/admin-home") || uri.contains("/orders-management") || uri.contains("/user-management") || uri.contains("/product-management") || uri.contains("/revenue-management")
 			|| uri.contains("/board-management") || uri.contains("/review-management") || uri.contains("/inquiry-management") || uri.contains("/notice-management")
 			|| uri.contains("announcementwrite")) {
-			if (user.getUserAdmin() == false) {
+			if (user.isUserAdmin() == false) {
 				response.sendRedirect("/xml-coffeeorderproject/userAccount/login");
 				return false;
 			}

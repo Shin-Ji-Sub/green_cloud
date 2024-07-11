@@ -39,9 +39,9 @@ public class UserDto {
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\\\":{}|<>]).{8,}$", message = "3형식이 맞지 않습니다")
 	private String userPw;
 	
-	private Boolean userAdmin;
+	private boolean userAdmin;
 	private Date userRegidate;
-	private Boolean userActive;
+	private boolean userActive;
 	
 	
 	private int couponId;
@@ -59,12 +59,10 @@ public class UserDto {
 		UserEntity userEntity = UserEntity.builder()
 								.userId(userId)
 								.userPw(userPw)
+								.userName(userName)
 								.userEmail(userEmail)
 								.userNickname(userNickname)
 								.userPhone(userPhone)
-//								.userAdmin(userAdmin)
-//								.userRegidate(userRegidate)
-//								.userActive(userActive)
 								.build();
 		return userEntity;
 	}
@@ -72,10 +70,11 @@ public class UserDto {
 	public static UserDto of(UserEntity userEntity) {
 		UserDto userDto = UserDto.builder()
 				.userId(userEntity.getUserId())
-				.userPw(userEntity.getUserPw())
+				.userName(userEntity.getUserName())
 				.userEmail(userEntity.getUserEmail())
 				.userNickname(userEntity.getUserNickname())
 				.userPhone(userEntity.getUserPhone())
+				.userAdmin(userEntity.isUserAdmin())
 				.build();
 
 		return userDto;

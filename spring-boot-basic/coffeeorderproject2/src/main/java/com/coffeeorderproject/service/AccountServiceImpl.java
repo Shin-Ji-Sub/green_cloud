@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
 		user.setUserPw(hashedPasswd);
 
 		UserEntity memberEntity = userRepository.findUserByUserIdAndUserPw(user.getUserId(), user.getUserPw());
-		UserDto member =
+		UserDto member = UserDto.of(memberEntity);
 
 //		UserDto member = userMapper.selectUser(user);
 		

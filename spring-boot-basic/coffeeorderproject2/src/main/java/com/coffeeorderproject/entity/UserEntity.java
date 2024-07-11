@@ -31,13 +31,13 @@ public class UserEntity {
 
     @Builder.Default
     @Column
-    private Boolean userAdmin = false;
+    private boolean userAdmin = false;
     @Builder.Default
     @Column
     private Date userRegidate = new Date();
     @Builder.Default
     @Column
-    private Boolean userActive = false;
+    private boolean userActive = false;
 
 
 }
