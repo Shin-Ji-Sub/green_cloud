@@ -135,7 +135,7 @@ public class BoardController {
 	@GetMapping(path = { "/detail/{boardNo}" })  // 주소/data
 	public String detailWithPathVariable(@PathVariable("boardNo") Integer boardNo, Model model) {
 
-		BoardDto board = boardService.findBoardByBoardNo(boardNo);
+		BoardDto board = boardService.findBoardByBoardNo2(boardNo);
 		model.addAttribute("board", board);
 
 		return "board/detail";
@@ -174,7 +174,7 @@ public class BoardController {
 			return "redirect:list";
 		}
 
-		BoardDto board = boardService.findBoardByBoardNo(boardNo);
+		BoardDto board = boardService.findBoardByBoardNo2(boardNo);
 		model.addAttribute("board", board);
 		model.addAttribute("pageNo", pageNo);
 

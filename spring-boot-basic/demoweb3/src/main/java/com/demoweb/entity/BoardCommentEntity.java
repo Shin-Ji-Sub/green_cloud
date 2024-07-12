@@ -17,10 +17,10 @@ import java.util.Date;
 public class BoardCommentEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int commentNo;
-    @Column(nullable = false)
-    private int boardNo;
+//    @Column(nullable = false)
+//    private int boardNo;
     @Column(nullable = false, length = 500)
     private String content;
     @Column(nullable = false)

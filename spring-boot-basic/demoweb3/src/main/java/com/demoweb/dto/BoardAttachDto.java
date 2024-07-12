@@ -1,6 +1,7 @@
 package com.demoweb.dto;
 
 import com.demoweb.entity.BoardAttachEntity;
+import com.demoweb.entity.BoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,12 +23,21 @@ public class BoardAttachDto {
 
 	public BoardAttachEntity toEntity() {
 		return BoardAttachEntity.builder()
-								.attachNo(attachNo)
-								.boardNo(boardNo)
+//								.attachNo(attachNo)
+//								.boardNo(boardNo)
 								.userFileName(userFileName)
 								.savedFileName(savedFileName)
 								.downloadCount(downloadCount)
 								.build();
+	}
+
+	public static BoardAttachDto of(BoardAttachEntity entity) {
+		return BoardAttachDto.builder()
+				.attachNo(entity.getAttachNo())
+				.userFileName(entity.getUserFileName())
+				.savedFileName(entity.getSavedFileName())
+				.downloadCount(entity.getDownloadCount())
+				.build();
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.demoweb.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.demoweb.entity.BoardAttachEntity;
 import com.demoweb.entity.BoardEntity;
@@ -49,18 +50,18 @@ public class BoardServiceImpl implements BoardService {
 //		boardMapper.insertBoard2(board);
 
 		BoardEntity boardEntity = board.toEntity();
-		boardRepository.save(boardEntity);
+//		boardRepository.save(boardEntity);
 
 		// int x = 10 / 0;  // 트랜젝션 테스트를 위해 강제 예외 발생
 
-//		List<BoardAttachEntity> attachments = new ArrayList<>();
+		List<BoardAttachEntity> attachments = new ArrayList<>();
 		for (BoardAttachDto attach : board.getAttachments()) {
-			attach.setBoardNo(boardEntity.getBoardNo());
-//			attachments.add(attach.toEntity());
-			boardAttachRepository.save(attach.toEntity());
+//			attach.setBoardNo(boardEntity.getBoardNo());
+			attachments.add(attach.toEntity());
+//			boardAttachRepository.save(attach.toEntity());
 		}
-//		boardEntity.setAttachments(attachments);
-//		boardRepository.save(boardEntity);
+		boardEntity.setAttachments(attachments);
+		boardRepository.save(boardEntity);
 
 	}
 	
@@ -101,9 +102,9 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 게시글 조회
 		BoardDto board = boardMapper.selectBoardByBoardNo(boardNo);
-		
+
 		// 첨부파일 조회
-		List<BoardAttachDto> attaches = boardMapper.selectBoardAttachByBoardNo(boardNo);		
+		List<BoardAttachDto> attaches = boardMapper.selectBoardAttachByBoardNo(boardNo);
 		board.setAttachments(attaches);
 		
 //		// 댓글 조회
@@ -118,42 +119,81 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 게시글 조회
 //		BoardDto board = boardMapper.selectBoardByBoardNo2(boardNo);
-		BoardDto board = boardMapper.selectBoardByBoardNo3(boardNo);
-		
-		return board;
-		
+//		BoardDto board = boardMapper.selectBoardByBoardNo3(boardNo);
+
+		Optional<BoardEntity> entity = boardRepository.findById(boardNo);
+		if (entity.isPresent()) {
+			BoardEntity boardEntity = entity.get();
+			BoardDto board = BoardDto.of(boardEntity);
+//			List<BoardAttachDto> attachments = new ArrayList<>();
+//			for (BoardAttachEntity entity2 : boardEntity.getAttachments()) {
+//				attachments.add(BoardAttachDto.of(entity2));
+//			}
+
+//			List<BoardAttachDto> attachments = boardEntity.getAttachments().stream().map(attach -> BoardAttachDto.of(attach)).toList();
+			List<BoardAttachDto> attachments = boardEntity.getAttachments().stream().map(BoardAttachDto::of).toList();
+			board.setAttachments(attachments);
+			return board;
+		} else {
+			return null;
+		}
+
+//		return entity.isPresent() ? BoardDto.of(entity.get()) : null;
 	}
 	
 
 	@Override
 	public BoardAttachDto findBoardAttachByAttachNo(int attachNo) {
-		BoardAttachDto attach = boardMapper.selectBoardAttachByAttachNo(attachNo);
-		return attach;
+//		Optional<BoardAttachEntity> entity = boardAttachRepository.findById(attachNo);
+//		return entity.isPresent() ? BoardAttachDto.of(entity) : null;
+		BoardAttachEntity entity = boardRepository.findBoardAttachByAttachNo(attachNo);
+		return BoardAttachDto.of(entity);
 	}
 
 	@Override
 	public void deleteBoard(int boardNo) {
-		boardMapper.updateBoardDeleted(boardNo);
-		
+//		boardMapper.updateBoardDeleted(boardNo);
+
+		BoardEntity entity = boardRepository.findById(boardNo).get();
+		// DB에서 데이터 삭제
+//		boardRepository.delete(entity);
+
+		// DB에서 데이터 업데이트
+		entity.setDeleted(true);
+		boardRepository.save(entity);
+
 	}
 
 	@Override
 	public void deleteBoardAttach(int attachNo) {
-		
-		boardMapper.deleteBoardAttach(attachNo);
-		
+		// 1
+//		boardAttachRepository.deleteById(attachNo);
+
+		// 2
+//		BoardAttachEntity entity = boardRepository.findBoardAttachByAttachNo(attachNo);
+//		boardAttachRepository.delete(entity);
+
+		// 3
+		boardRepository.deleteBoardAttachByAttachNo(attachNo);
+
 	}
 
 	@Override
 	public void modifyBoard(BoardDto board) {
-		
-		boardMapper.updateBoard(board);
-		
+
+		BoardEntity entity = boardRepository.findById(board.getBoardNo()).get();
+		entity.setTitle(board.getTitle());
+		entity.setContent(board.getContent());
+//		boardRepository.save(entity);
+
 		if (board.getAttachments() != null) {
 			for (BoardAttachDto attach : board.getAttachments()) {
-				boardMapper.insertBoardAttach(attach);
+//				List<BoardAttachEntity> attaches = board.getAttachments().stream().map(a -> a.toEntity()).toList();
+				boardRepository.insertBoardAttach(attach.getBoardNo(), attach.getUserFileName(), attach.getSavedFileName());
 			}
+//			entity.setAttachments(attaches);
 		}
+//		boardRepository.save(entity);
 	}
 
 	@Override

@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 public class BoardAttachEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int attachNo;
-    @Column(nullable = false)
-    private int boardNo;
+//    @Column(nullable = false)
+//    private int boardNo;
     @Column(nullable = false)
     private String userFileName;
     @Column(nullable = false)

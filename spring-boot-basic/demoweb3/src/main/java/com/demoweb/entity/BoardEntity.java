@@ -20,7 +20,9 @@ import java.util.List;
 public class BoardEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.TABLE)
+//    @TableGenerator(name = "board_seq", allocationSize = 1)  // default 는 50
     private int boardNo;
     @Column(nullable = false)
     private String title;

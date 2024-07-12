@@ -5,18 +5,27 @@ import java.util.List;
 
 import com.coffeeorderproject.dto.OrdersDto;
 import com.coffeeorderproject.dto.ProductDto;
+import com.coffeeorderproject.entity.BoardEntity;
 import com.coffeeorderproject.mapper.BoardMapper;
 
+import com.coffeeorderproject.repository.BoardRepository;
 import lombok.Setter;
 
 import com.coffeeorderproject.dto.BoardAttachDto;
 import com.coffeeorderproject.dto.BoardCommentDto;
 import com.coffeeorderproject.dto.BoardDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public class BoardServiceImpl implements BoardService {
 
 	@Setter
 	BoardMapper boardMapper;
+
+	@Setter
+	BoardRepository boardRepository;
 
 	@Override
 	public void writeBoard(BoardDto board) {
@@ -55,10 +64,18 @@ public class BoardServiceImpl implements BoardService {
 //	}
 
 	@Override
-	public List<BoardDto> findReviewBoardByRange(int start, int count) {
+	public List<BoardDto> findReviewBoardByRange(int pageNo, int count) {
 
-		List<BoardDto> board = boardMapper.selectReviewBoardByRange(start, count);
-		return board;
+//		List<BoardDto> board = boardMapper.selectReviewBoardByRange(start, count);
+
+		Pageable pageable = PageRequest.of(pageNo, count, Sort.by(Sort.Direction.DESC, "boardNo"));
+		Page<BoardEntity> page = boardRepository.findAll(pageable);
+		List<BoardDto> boards = new ArrayList<>();
+		for (BoardEntity boardEntity : page.getContent()) {
+			boards.add(BoardDto.of(boardEntity));
+		}
+
+		return boards;
 
 	}
 

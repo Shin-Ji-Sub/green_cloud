@@ -2,6 +2,7 @@ package com.coffeeorderproject.config;
 
 import javax.sql.DataSource;
 
+import com.coffeeorderproject.repository.BoardRepository;
 import com.coffeeorderproject.repository.UserRepository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -79,9 +80,11 @@ public class RootConfiguration {
 		return accountService;
 	}
 	
-	@Bean BoardService boardService(BoardMapper boardMapper) throws Exception {
+	@Bean BoardService boardService(BoardMapper boardMapper, BoardRepository boardRepository) throws Exception {
 		BoardServiceImpl boardService = new BoardServiceImpl();
 		boardService.setBoardMapper(boardMapper);
+
+		boardService.setBoardRepository(boardRepository);
 //		boardService.setTransactionTemplate(transactionTemplate());
 		return boardService;
 	}

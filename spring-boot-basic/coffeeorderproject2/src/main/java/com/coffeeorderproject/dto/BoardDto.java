@@ -1,14 +1,21 @@
 package com.coffeeorderproject.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.coffeeorderproject.dto.ProductDto;
+import com.coffeeorderproject.entity.BoardEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BoardDto {
 
 	//board 게시판 정보
@@ -33,5 +40,16 @@ public class BoardDto {
 	private List<BoardAttachDto> attachments;
 	private ArrayList<BoardCommentDto> comments;
 	private List<ProductDto> products;
+
+	public static BoardDto of(BoardEntity entity) {
+		return BoardDto.builder()
+				.boardTitle(entity.getBoardTitle())
+				.userId(entity.getUserId())
+				.boardContent(entity.getBoardContent())
+				.boardDate(entity.getBoardDate())
+				.boardModifyDate(entity.getBoardModifyDate())
+				.boardDelete(entity.isBoardDelete())
+				.build();
+	}
 
 }
