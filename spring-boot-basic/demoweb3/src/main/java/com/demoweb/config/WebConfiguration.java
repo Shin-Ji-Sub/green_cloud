@@ -41,12 +41,12 @@ public class WebConfiguration implements WebMvcConfigurer {
 		return new AuthInterceptor();
 	}
 	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authInterceptor())
-				.addPathPatterns("/board/**")
-				.excludePathPatterns("/board/list", "/board/detail");
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(authInterceptor())
+//				.addPathPatterns("/board/**")
+//				.excludePathPatterns("/board/list", "/board/detail");
+//	}
 	
 	
 	// Mail Config

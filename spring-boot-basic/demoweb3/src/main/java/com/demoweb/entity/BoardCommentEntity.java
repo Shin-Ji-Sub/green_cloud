@@ -43,4 +43,8 @@ public class BoardCommentEntity {
     @Column(nullable = false)
     private int depth;
 
+    @ManyToOne
+    @JoinColumn(name = "boardNo")
+    private BoardEntity board;
+
 }

@@ -45,13 +45,13 @@ public class BoardEntity {
     private boolean deleted = false;
 
     // board 테이블과 boardattach 테이블 사이의 1 : Many 관계를 구현하는 필드
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // 지워지면 자식 테이블은 어떻게 할건지 설정
-    @JoinColumn(name = "boardNo")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // 지워지면 자식 테이블은 어떻게 할건지 설정
+//    @JoinColumn(name = "boardNo")
     private List<BoardAttachEntity> attachments;
 
     // board 테이블과 boardcomment 테이블 사이의 1 : Many 관계를 구현하는 필드
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardNo")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // cascade가 없으면 부모 테이블에 변경이 생겨도 자식 테이블에 영향이 가지 않는다.
+//    @JoinColumn(name = "boardNo")
     private List<BoardCommentEntity> comments;
 
 }

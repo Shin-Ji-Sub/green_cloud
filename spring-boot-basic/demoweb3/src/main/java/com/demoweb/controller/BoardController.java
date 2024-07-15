@@ -31,13 +31,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
 
 @Controller
-@RequestMapping(path = { "/board" })
+@RequestMapping(path = {"/board"})
 public class BoardController {
 
-	@Setter(onMethod_ = { @Autowired })
+	@Setter(onMethod_ = {@Autowired})
 	private BoardService boardService;
 
-//	@GetMapping(path = { "/list" })
+	//	@GetMapping(path = { "/list" })
 //	public String list(Model model) {
 //
 //		List<BoardDto> boards = boardService.findAllBaord();
@@ -45,12 +45,12 @@ public class BoardController {
 //
 //		return "board/list-without-page"; // /WEB-INF/views/ + board/list + .jsp
 //	}
-	@GetMapping(path = { "/list" })
-	public String listRange(@RequestParam(name="pageNo", defaultValue = "1") int pageNo, HttpServletRequest req, Model model) {
+	@GetMapping(path = {"/list"})
+	public String listRange(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, HttpServletRequest req, Model model) {
 
-		int pageSize = 3; 		// 한 페이지에 표시하는 데이터 갯수
-		int pagerSize = 3;		// 한 번에 표시되는 페이지 번호 갯수
-		int dataCount = boardService.getBoardCount();	// 전체 데이터 갯수
+		int pageSize = 3;        // 한 페이지에 표시하는 데이터 갯수
+		int pagerSize = 3;        // 한 번에 표시되는 페이지 번호 갯수
+		int dataCount = boardService.getBoardCount();    // 전체 데이터 갯수
 		String uri = req.getRequestURI();
 		String linkUrl = uri.substring(uri.lastIndexOf("/") + 1); // 페이지 번호를 클릭했을 때 요청을 보낼 URL ( 목록 페이지 경로 )
 		String queryString = req.getQueryString();
@@ -69,13 +69,13 @@ public class BoardController {
 		return "board/list"; // /WEB-INF/views/ + board/list + .jsp
 	}
 
-	@GetMapping(path = { "/write" })
+	@GetMapping(path = {"/write"})
 	public String writeForm() {
 
 		return "board/write";
 	}
 
-	@PostMapping(path = { "/write" })
+	@PostMapping(path = {"/write"})
 	public String write(@ModelAttribute("board") BoardDto board, // @ModelAttribute("board") 생략 가능하지만, 써주면 정확한 방법
 						MultipartFile attach,  // <input type="file" 의 데이터를 담은 변수
 						HttpServletRequest req) {
@@ -113,10 +113,10 @@ public class BoardController {
 		return "redirect:list";
 	}
 
-	@GetMapping(path = { "/detail" })
+	@GetMapping(path = {"/detail"})
 	public String detailWithQueryString(
-			@RequestParam(value="boardno", required = false) Integer boardNo,
-			@RequestParam(value="pageNo", defaultValue = "1") Integer pageNo, Model model) {  // null 이 들어올 수 있기 때문에 int -> Integer
+			@RequestParam(value = "boardno", required = false) Integer boardNo,
+			@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo, Model model) {  // null 이 들어올 수 있기 때문에 int -> Integer
 
 		// 요청 데이터의 값이 없는 경우
 		if (boardNo == null) {
@@ -132,7 +132,7 @@ public class BoardController {
 		return "board/detail";
 	}
 
-	@GetMapping(path = { "/detail/{boardNo}" })  // 주소/data
+	@GetMapping(path = {"/detail/{boardNo}"})  // 주소/data
 	public String detailWithPathVariable(@PathVariable("boardNo") Integer boardNo, Model model) {
 
 		BoardDto board = boardService.findBoardByBoardNo2(boardNo);
@@ -141,7 +141,7 @@ public class BoardController {
 		return "board/detail";
 	}
 
-	@GetMapping(path = { "/download" })
+	@GetMapping(path = {"/download"})
 	public View downloadWithQueryString(@RequestParam("attachno") int attachNo, Model model) {
 
 		BoardAttachDto boardAttach = boardService.findBoardAttachByAttachNo(attachNo);
@@ -154,7 +154,7 @@ public class BoardController {
 
 	}
 
-	@GetMapping(path = { "/delete" })
+	@GetMapping(path = {"/delete"})
 	public String delete(int boardNo, @RequestParam(defaultValue = "-1") int pageNo) {
 
 		if (pageNo == -1) {
@@ -167,7 +167,7 @@ public class BoardController {
 
 	}
 
-	@GetMapping(path = { "/edit" })
+	@GetMapping(path = {"/edit"})
 	public String showEditForm(int boardNo, @RequestParam(defaultValue = "-1") int pageNo, Model model) {
 
 		if (pageNo == -1) {
@@ -182,7 +182,7 @@ public class BoardController {
 
 	}
 
-	@PostMapping(path = { "/edit" })
+	@PostMapping(path = {"/edit"})
 	public String editBoard(BoardDto board, MultipartFile attach, HttpServletRequest req, @RequestParam(required = false) Integer pageNo) {
 
 		if (board.getBoardNo() == 0 || pageNo == null) {
@@ -219,7 +219,7 @@ public class BoardController {
 		return String.format("redirect:detail?boardno=%d&pageNo=%d", board.getBoardNo(), pageNo);
 	}
 
-	@GetMapping(path = { "/delete-attach" })
+	@GetMapping(path = {"/delete-attach"})
 	@ResponseBody
 	public String deleteAttach(@RequestParam(required = false) Integer attachNo, HttpServletRequest req) {
 
@@ -240,7 +240,7 @@ public class BoardController {
 	}
 
 
-	@GetMapping(path = { "/list-comment" })
+	@GetMapping(path = {"/list-comment"})
 	public String listComment(int boardNo, Model model) {
 
 		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
@@ -249,17 +249,6 @@ public class BoardController {
 
 		return "board/comment-list";
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

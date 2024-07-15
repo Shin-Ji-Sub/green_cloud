@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.demoweb.entity.BoardAttachEntity;
+import com.demoweb.entity.BoardCommentEntity;
 import com.demoweb.entity.BoardEntity;
 import com.demoweb.repository.BoardAttachRepository;
 import com.demoweb.repository.BoardRepository;
@@ -54,12 +55,22 @@ public class BoardServiceImpl implements BoardService {
 
 		// int x = 10 / 0;  // 트랜젝션 테스트를 위해 강제 예외 발생
 
-		List<BoardAttachEntity> attachments = new ArrayList<>();
-		for (BoardAttachDto attach : board.getAttachments()) {
-//			attach.setBoardNo(boardEntity.getBoardNo());
-			attachments.add(attach.toEntity());
-//			boardAttachRepository.save(attach.toEntity());
-		}
+//		List<BoardAttachEntity> attachments = new ArrayList<>();
+//		for (BoardAttachDto attach : board.getAttachments()) {
+//			BoardAttachEntity attachEntity = attach.toEntity();
+//			attachEntity.setBoard(boardEntity);
+//			attachments.add(attachEntity);
+////			attach.setBoardNo(boardEntity.getBoardNo());
+////			boardAttachRepository.save(attach.toEntity());
+//		}
+
+		// 대규모 데이터를 일괄 처리 할 때 성능이 더 좋음 (stream())
+		List<BoardAttachEntity> attachments = board.getAttachments().stream().map(attach -> {
+			BoardAttachEntity attachEntity = attach.toEntity();
+			attachEntity.setBoard(boardEntity);
+			return attachEntity;
+		}).toList();
+
 		boardEntity.setAttachments(attachments);
 		boardRepository.save(boardEntity);
 
@@ -184,29 +195,38 @@ public class BoardServiceImpl implements BoardService {
 		BoardEntity entity = boardRepository.findById(board.getBoardNo()).get();
 		entity.setTitle(board.getTitle());
 		entity.setContent(board.getContent());
-//		boardRepository.save(entity);
 
 		if (board.getAttachments() != null) {
-			for (BoardAttachDto attach : board.getAttachments()) {
-//				List<BoardAttachEntity> attaches = board.getAttachments().stream().map(a -> a.toEntity()).toList();
-				boardRepository.insertBoardAttach(attach.getBoardNo(), attach.getUserFileName(), attach.getSavedFileName());
-			}
-//			entity.setAttachments(attaches);
+			List<BoardAttachEntity> attachEntities = board.getAttachments().stream().map(attach -> {
+				BoardAttachEntity attachEntity = attach.toEntity();
+				attachEntity.setBoard(entity);
+				return attachEntity;
+			}).toList();
+			// entity.setAttachments(attachEntities);
+			entity.getAttachments().addAll(attachEntities);
 		}
-//		boardRepository.save(entity);
+
+		boardRepository.save(entity);
 	}
 
 	@Override
 	public void writeComment(BoardCommentDto comment) {
 		
-		boardMapper.insertComment(comment);
+		BoardEntity boardEntity= boardRepository.findById(comment.getBoardNo()).get();
+		BoardCommentEntity commentEntity = comment.toEntity();
+		commentEntity.setBoard(boardEntity);
+		boardEntity.getComments().add(commentEntity);
+		boardRepository.save(boardEntity);
 		
 	}
 
 	@Override
 	public List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo) {
-		
-		List<BoardCommentDto> comments = boardMapper.selectBoardCommentsByBoardNo(boardNo);
+
+		List<BoardCommentEntity> commentEntities = boardRepository.findById(boardNo).get().getComments();
+		List<BoardCommentDto> comments = commentEntities.stream().map(BoardCommentDto::of).toList();
+
+//		List<BoardCommentDto> comments = boardMapper.selectBoardCommentsByBoardNo(boardNo);
 		
 		return comments;
 	}
