@@ -28,8 +28,8 @@
                         <tr>
                             <th>작성자</th>
                             <td>
-                                <input type="hidden" name="writer" th:value="${ #ctx.session.loginuser.memberId }">
-                                <span th:text="${ #ctx.session.loginuser.memberId}"></span>
+                                <input type="hidden" name="writer" th:value="${ #authentication.principal.Username }">
+                                <span th:text="${ #authentication.principal.Username }"></span>
                             </td>
                         </tr>
                         <tr>

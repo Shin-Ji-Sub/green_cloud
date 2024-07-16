@@ -1,6 +1,7 @@
 package com.demoweb.service;
 
 import com.demoweb.entity.MemberEntity;
+import com.demoweb.entity.RoleEntity;
 import com.demoweb.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +11,9 @@ import com.demoweb.mapper.MemberMapper;
 
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class AccountServiceImpl implements AccountService {
 	
@@ -29,11 +32,14 @@ public class AccountServiceImpl implements AccountService {
 		// 업무 규칙(요구사항) 처리
 		String hashedPasswd = Util.getHashedString(member.getPasswd(), "SHA-256");
 		member.setPasswd(hashedPasswd);
-		
-		// 데이터베이스에 데이터 저장 ( Dao 호출 )
-		// memberMapper.insertMember(member);
 
 		MemberEntity memberEntity = member.toEntity();
+
+		RoleEntity role = memberRepository.findRoleByRoleName(member.getUserType());
+		Set<RoleEntity> roles = new HashSet<>();
+		roles.add(role);
+		memberEntity.setRoles(roles);
+
 		memberRepository.save(memberEntity);  // Entity 저장 -> insert or update
 		
 	}

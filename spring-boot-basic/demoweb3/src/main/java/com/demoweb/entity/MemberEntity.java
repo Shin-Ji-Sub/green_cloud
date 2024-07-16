@@ -1,15 +1,13 @@
 package com.demoweb.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,5 +32,14 @@ public class MemberEntity {
     @Builder.Default
     @Column
     private boolean active = true;
+
+    @ManyToMany
+    // 무게 중심이 있는 쪽으로 테이블을 생성
+    @JoinTable(
+            name = "tbl_member_role",
+            joinColumns = @JoinColumn(name = "memberId"),
+            inverseJoinColumns = @JoinColumn(name = "roleNo")
+    )
+    private Set<RoleEntity> roles;
 
 }

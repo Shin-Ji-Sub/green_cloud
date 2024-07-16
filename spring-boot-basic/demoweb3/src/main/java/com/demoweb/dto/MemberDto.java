@@ -25,8 +25,9 @@ public class MemberDto {
 	@NotBlank(message = "이메일을 입력하세요")
 	@Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "이메일은 형식이 잘못되었습니다")
 	private String email;
-	
-	private String userType;
+
+	@Builder.Default
+	private String userType = "ROLE_USER";
 	private Date regDate;
 	private boolean active;
 
@@ -35,19 +36,19 @@ public class MemberDto {
 									.memberId(memberId)
 									.passwd(passwd)
 									.email(email)
+									.userType(userType)
 									.build();
 		return memberEntity;
 	}
 
 	public static MemberDto of(MemberEntity memberEntity) {
-		MemberDto memberDto = MemberDto.builder()
-				.memberId(memberEntity.getMemberId())
-				.email(memberEntity.getEmail())
-				.userType(memberEntity.getUserType())
-				.regDate(memberEntity.getRegDate())
-				.build();
-
-		return  memberDto;
+		return MemberDto.builder()
+							.memberId(memberEntity.getMemberId())
+							.passwd(memberEntity.getPasswd())
+							.email(memberEntity.getEmail())
+							.userType(memberEntity.getUserType())
+							.regDate(memberEntity.getRegDate())
+							.build();
 	}
 
 }
