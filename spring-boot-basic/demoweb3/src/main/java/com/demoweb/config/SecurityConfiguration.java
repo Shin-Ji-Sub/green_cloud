@@ -1,5 +1,7 @@
 package com.demoweb.config;
 
+import com.demoweb.security.DemoWebPasswordEncoder;
+import com.demoweb.security.DemoWebUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -82,15 +84,21 @@ public class SecurityConfiguration {
                         .loginPage("/account/login")
                         .usernameParameter("memberId")
                         .passwordParameter("passwd")
-                        .loginProcessingUrl("/account/process-login")); // 일반적으로 사용하는 id, pw 입력받아서 로그인하는 행동
+                        .loginProcessingUrl("/account/process-login")) // 일반적으로 사용하는 id, pw 입력받아서 로그인하는 행동
+                .logout((logout) -> logout
+                        .logoutUrl("/account/logout")
+                        .invalidateHttpSession(true)  // session 지우는 작업
+                        .deleteCookies("JSESSIONID")   // 자바가 사용하는 seesion cookie 지우는 작업
+                        .logoutSuccessUrl("/home"));
 
         return http.build();
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder(){ // Spring Security가 기본적으로 사용하는 passwordEncoder
-        return new BCryptPasswordEncoder();
-    }
+    // for 1, 2
+//    @Bean
+//    PasswordEncoder passwordEncoder(){ // Spring Security가 기본적으로 사용하는 passwordEncoder
+//        return new BCryptPasswordEncoder();
+//    }
 
 //    // 1.
 //    @Bean
@@ -120,19 +128,29 @@ public class SecurityConfiguration {
 //    }
 
     // 2-2.
+//    @Bean
+//    public UserDetailsService userDetailsService(DataSource dataSource) { // JdbcUserDetailsManager? DB에 저장함
+//
+//        JdbcUserDetailsManager userDetailsService = new JdbcUserDetailsManager(dataSource); // 미리 정해진 테이블, SQL을 사용해서 인증처리
+//
+//        // 사용자 정의 테이블을 사용하기 위해 로그인, 권한 검사에 사용할 Query 지정 (약속된 테이블이 아니라 커스텀이라 코드+쿼리문으로 알려 줘야함)
+//        userDetailsService.setUsersByUsernameQuery("select email,password,enabled "
+//                + "from custom_users "
+//                + "where email = ?");
+//        userDetailsService.setAuthoritiesByUsernameQuery("select email, authority " +
+//                "from custom_authorities " +
+//                "where email = ?");
+//        return userDetailsService;
+//    }
+
+    // 3
+    @Bean PasswordEncoder passwordEncoder() {
+        return new DemoWebPasswordEncoder();
+    }
+
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) { // JdbcUserDetailsManager? DB에 저장함
-
-        JdbcUserDetailsManager userDetailsService = new JdbcUserDetailsManager(dataSource); // 미리 정해진 테이블, SQL을 사용해서 인증처리
-
-        // 사용자 정의 테이블을 사용하기 위해 로그인, 권한 검사에 사용할 Query 지정 (약속된 테이블이 아니라 커스텀이라 코드+쿼리문으로 알려 줘야함)
-        userDetailsService.setUsersByUsernameQuery("select email,password,enabled "
-                + "from custom_users "
-                + "where email = ?");
-        userDetailsService.setAuthoritiesByUsernameQuery("select email, authority " +
-                "from custom_authorities " +
-                "where email = ?");
-        return userDetailsService;
+    public UserDetailsService userDetailsService() {
+        return new DemoWebUserDetailsService();
     }
 
 }
